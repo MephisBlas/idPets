@@ -1,16 +1,13 @@
 from sqlite3 import IntegrityError
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import  authenticate
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-
 from .forms import CustomUserCreationForm
 from django.contrib.auth import logout
 from .forms import LoginForm
 from django.contrib.auth import login as auth_login 
-
-
 
 # Create your views here.
 
