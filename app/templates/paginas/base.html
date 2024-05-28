@@ -78,8 +78,16 @@
             background-position: center; /* Centra la imagen de fondo */
             background-attachment: fixed; /* Hace que el fondo sea estático */
         }
-
         
+        /* Ocultar enlaces de registro e inicio de sesión cuando el usuario ha iniciado sesión */
+        .logged-in-links {
+            display: {% if user.is_authenticated %}none{% else %}block{% endif %};
+        }
+        
+        /* Mostrar enlace de cierre de sesión solo cuando el usuario ha iniciado sesión */
+        .logged-out-links {
+            display: {% if user.is_authenticated %}block{% else %}none{% endif %};
+        }
     </style>
 </head>
 
@@ -114,22 +122,28 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">
-                                <i class="fas fa-user"></i> Iniciar Sesión
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'signup' %}">
-                                <i class="fas fa-user-plus"></i> Registrarse
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-door-open"></i> Cerrar Sesión
-                            </a>
-                        </li>
+                        {% if user.is_authenticated %}
+                            <!-- Enlace de Cerrar Sesión -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'cerrar_sesion' %}">
+                                    <i class="fas fa-door-open"></i> Cerrar Sesión
+                                </a>
+                            </li>
+                        {% else %}
+                            <!-- Enlaces de Iniciar Sesión y Registrarse -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'login' %}">
+                                    <i class="fas fa-user"></i> Iniciar Sesión
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'signup' %}">
+                                    <i class="fas fa-user-plus"></i> Registrarse
+                                </a>
+                            </li>
+                        {% endif %}
                     </ul>
+                    
                 </div>
             </div>
         </nav>

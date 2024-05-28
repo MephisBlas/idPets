@@ -1,9 +1,8 @@
 {% extends 'paginas/base.html' %}
 
-{% block title %}Nosotros{% endblock %}
+{% block title %}Iniciar Sesión{% endblock %}
 
 {% block content %}
-<br><br>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,7 +32,7 @@
 <body>
     <div class="login-container">
         <h2 class="login-title">Iniciar Sesión</h2>
-        <form action="/login/" method="POST">
+        <form method="post">
             {% csrf_token %}
             <div class="form-group">
                 <label for="username">Usuario:</label>

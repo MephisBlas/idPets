@@ -1,8 +1,14 @@
 from sqlite3 import IntegrityError
+from django.contrib.auth import login, authenticate
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .forms import CustomUserCreationForm
+from django.contrib.auth import logout
+from .forms import LoginForm
+from django.contrib.auth import login as auth_login 
+
 # Create your views here.
 
 def inicio(request):
@@ -20,21 +26,34 @@ def editar_mascotas(request):
     return render(request, 'Mascotas/editar_mascotas.html')
 
 def signup(request):
-    if request.method == 'GET':
-        return render(request, 'paginas/signup.html', {"form": UserCreationForm})
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            auth_login(request, user)  # Iniciar sesión automáticamente después del registro
+            return redirect('inicio')  # Redirige a la página de inicio después de iniciar sesión
     else:
+        form = CustomUserCreationForm()
+    return render(request, 'paginas/signup.html', {"form": form})
 
-        if request.POST["password1"] == request.POST["password2"]:
-            try:
-                user = User.objects.create_user(
-                    request.POST["username"], password=request.POST["password1"])
-                user.save()
-                login(request, user)
-                return redirect('tasks')
-            except IntegrityError:
-                return render(request, 'signup.html', {"form": UserCreationForm, "error": "Username already exists."})
+def iniciar_sesion(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                auth_login(request, user)  # Iniciar sesión si las credenciales son válidas
+                return redirect('inicio')
+            else:
+                # Mensaje de error si las credenciales son inválidas
+                return render(request, 'paginas/login.html', {'form': form, 'error_message': 'Nombre de usuario o contraseña incorrectos'})
+    else:
+        form = LoginForm()
+    return render(request, 'paginas/login.html', {'form': form})
 
-        return render(request, 'signup.html', {"form": UserCreationForm, "error": "Passwords did not match."})
-def login(request):
-    return render (request,'paginas/login.html')
+def cerrar_sesion(request):
+    logout(request)  # Cerrar sesión del usuario
+    return redirect('inicio')
 
