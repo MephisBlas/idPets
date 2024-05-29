@@ -123,12 +123,6 @@
                     </ul>
                     <ul class="navbar-nav ml-auto">
                         {% if user.is_authenticated %}
-                            <!-- Enlace de Editar Usuario -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'editar_usuario' %}">
-                                    <i class="fas fa-user-edit"></i> Editar Usuario
-                                </a>
-                            </li>
                             <!-- Enlace de Cerrar Sesión -->
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'cerrar_sesion' %}">

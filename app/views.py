@@ -8,7 +8,6 @@ from .forms import CustomUserCreationForm
 from django.contrib.auth import logout
 from .forms import LoginForm
 from django.contrib.auth import login as auth_login 
-from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -57,36 +56,4 @@ def iniciar_sesion(request):
 def cerrar_sesion(request):
     logout(request)  # Cerrar sesión del usuario
     return redirect('inicio')
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 
-@login_required
-def editar_usuario(request):
-    user = request.user
-    if request.method == 'POST':
-        nombre_usuario = request.POST.get('nombre_usuario')
-        nueva_contraseña = request.POST.get('contraseña')
-        
-        # Actualizar nombre de usuario si es diferente
-        if nombre_usuario != user.username:
-            user.username = nombre_usuario
-            user.save()
-        
-        # Actualizar contraseña si es diferente
-        if nueva_contraseña:
-            user.set_password(nueva_contraseña)
-            user.save()
-        
-        return redirect('inicio')  # Redirigir a la página de inicio después de editar el perfil
-    else:
-        return render(request, 'editar_usuario.html', {'user': user})
-
-@login_required
-def borrar_usuario(request):
-    if request.method == 'POST':
-        user = request.user
-        user.delete()  # Eliminar el usuario
-        return redirect('inicio')  # Redirigir a la página de inicio u otra página
-    else:
-        return render(request, 'borrar_usuario.html')
